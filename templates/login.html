@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Panel</title>
+  </head>
+  <body>
+    <h1>Login Panel</h1>
+    <form method="post" action="/loginservice/login/">
+      {% csrf_token %}
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username"><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <script>
+      // Part 2 code
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+        const csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;  // Get CSRF token value
+        const data = new URLSearchParams({ username, password }).toString(); // Encode data
+        const response = await fetch('/loginservice/login/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrf_token
+            },
+            body: JSON.stringify({ username, password }),
+            })
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error(error));
+        };
+    </script>
+  </body>
+</html>
